@@ -1,123 +1,97 @@
+import {random,countBtn,generateLog,randomInteger} from  "./utils.js";
+import Pokemon from "./pokemon.js";
+import  {pokemons} from "./pokemons.js";
+const control = document.querySelector('.control');
+
+class Game {
+
+    start = async () =>{
+
+        const pokemonPlayer = this.getPockemon();
+
+        const pokemonRobot = this.getPockemon();
 
 
-const btn = document.getElementById('btn-kick');
-const btnBig = document.getElementById('btn-kick-big');
+        let player1 =  this.initPlayer(pokemonPlayer,'player1');
+        let player2 = this.initPlayer(pokemonRobot,'player2');
 
-
-const mainHero = {
-    name:'Pikachu',
-    defaultHP: 100,
-    damageHP:100,
-    elHP:document.getElementById('health-character'),
-    elProgressBar:document.getElementById('progressbar-character'),
-    changeHP:changeHP,
-    renderHP:renderHP,
-    renderHPLife:renderHPLife,
-    renderProgressbarHP: renderProgressbarHP,
-}
-const enemyHero = {
-    name:'Charmander',
-    defaultHP: 100,
-    damageHP:100,
-    elHP:document.getElementById('health-enemy'),
-    elProgressBar:document.getElementById('progressbar-enemy'),
-    changeHP:changeHP,
-    renderHP:renderHP,
-    renderHPLife:renderHPLife,
-    renderProgressbarHP: renderProgressbarHP,
-}
-function countClick() {
-    let num = 0;
-
-    return function (nameBtn) {
-        num++;
-        if(num >= 4){
-            return false;
-        }else {
-            console.log(`осталось нажатий  на ${nameBtn} - ${(4-num)}`)
-        }
-
+        this.initBtn(player1,player2);
     }
-}
-function damage(count) {
-    mainHero.changeHP(random(count));
-    enemyHero.changeHP(random(count));
-}
-const countBtn = countClick();
-const countBigBtn = countClick();;
-btn.addEventListener('click',function () {
-    damage(20);
-    if(countBtn('btn') === false){
-        this.disabled = true;
+    getPockemon() {
+        return pokemons[randomInteger(0, 5)];
     }
-});
-btnBig.addEventListener('click',function () {
-    damage(50);
-    if( countBigBtn('btnBig') === false){
-        this.disabled = true;
+    initBtnStart() {
+        const $start = document.getElementById('start');
+        $start.addEventListener('click',()=>{
+            const allButtons = document.querySelectorAll('.control .button');
+            allButtons.forEach($item => $item.remove());
+            this.start();
+        })
     }
-});
+    gameOver() {
+        const allButtons = document.querySelectorAll('.control .button');
+        allButtons.forEach($item => $item.remove());
 
-function init() {
-    mainHero.renderHP();
-    enemyHero.renderHP();
-}
-function  renderHP(){
-    this.renderHPLife();
-    this.renderProgressbarHP();
-}
-
-function renderHPLife() {
-    this.elHP.innerText = this.damageHP + ' / ' + this.defaultHP;
-}
-function renderProgressbarHP() {
-    this.elProgressBar.style.width = this.damageHP / (this.defaultHP/100)  + '%';
-}
-function changeHP(count) {
-    console.log(this)
-    console.log(count)
-    console.log('перерд damage',this.damageHP)
-
-
-    if (this.damageHP <= count){
-        this.damageHP =0;
-        alert('Проиграл - '+this.name);
-        btn.disabled = true;
-        btnBig.disabled = true;
-    }else{
-        this.damageHP -=count;
+        const btn = document.createElement('button');
+        btn.classList.add('button');
+        btn.innerText ="New Game";
+        btn.id ='start';
+        control.appendChild(btn);
+        this.initBtnStart();
     }
-    console.log('после damage',this.damageHP)
-    const log = this === mainHero ? generateLog(this , enemyHero,count) : generateLog(this, mainHero,count);
-    listLog(log);
-    this.renderHP();
-}
-function random(num) {
-    return Math.ceil(Math.random() * num);
-}
 
-function generateLog({name}=first,{name: secondName,damageHP} = second,damage) {
-    const logs = [
-        ` ${secondName} вспомнил что-то важное, но неожиданно ${name}, не помня себя от испуга, ударил в предплечье врага. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName}  поперхнулся, и за это ${name} с испугу приложил прямой удар коленом в лоб врага. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName}  забылся, но в это время наглый ${name}, приняв волевое решение, неслышно подойдя сзади, ударил. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName}  пришел в себя, но неожиданно ${name} случайно нанес мощнейший удар. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName} поперхнулся, но в это время ${name} нехотя раздробил кулаком \<вырезанно цензурой\> противника. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName} удивился, а ${name} пошатнувшись влепил подлый удар. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName} высморкался, но неожиданно ${name} провел дробящий удар. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName} пошатнулся, и внезапно наглый ${name} беспричинно ударил в ногу противника Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName} расстроился, как вдруг, неожиданно ${name} случайно влепил стопой в живот соперника. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`,
-        ` ${secondName} пытался что-то сказать, но вдруг, неожиданно ${name} со скуки, разбил бровь сопернику. Нанесено урона для ${secondName} - ${damage}, осталось ${damageHP}`
-    ];
 
-    return logs[random(logs.length)-1];
+
+    initBtn(player1,player2) {
+        const thisGame = this;
+        player1.attacks.forEach(item=>{
+            const btn = document.createElement('button');
+            btn.classList.add('button');
+            btn.setAttribute('maxDamage',item.maxDamage)
+            btn.setAttribute('minDamage',item.minDamage)
+            btn.innerText = item.name;
+            const btnCount = countBtn(item.maxCount,btn);
+            btn.addEventListener('click', async () => {
+
+                btnCount();
+                const kickPlayer1 = random(item.maxDamage,item.minDamage);
+                player2.changeHP(kickPlayer1,function (count) {
+                    thisGame.printLogs(generateLog(player1,player2,count))
+                });
+                if (player2.hp.current == 0){
+
+                    const pokemon = this.getPockemon();
+                    player2 = this.initPlayer(pokemon,'player2');
+                }
+
+                const attackPlayer2 = player2.attacks[randomInteger(0, 3)];
+                const kickPlayer2 = random( attackPlayer2.maxDamage, attackPlayer2.minDamage); // TODO брать из атаки врага
+                player1.changeHP(kickPlayer2,function (count) {
+                    thisGame.printLogs(generateLog(player2,player1,count))
+                });
+                if (player1.hp.current == 0){
+                    this.gameOver();
+                }
+            });
+            control.appendChild(btn);
+
+
+        })
+    }
+    printLogs(text){
+        const p = document.createElement('p');
+        p.innerText = text;
+        const  divLogs = document.querySelector('#logs');
+        divLogs.childElementCount ===0 ? divLogs.appendChild(p) : divLogs.insertBefore(p,divLogs.children[0]);
+    }
+    initPlayer(player,selector) {
+        return  new Pokemon({
+            ...player,
+            selectors:selector,
+        });
+    }
+
+
 }
-
-function listLog(log) {
-    const p = document.createElement('p');
-    p.innerText = log;
-    const  divLogs = document.querySelector('#logs');
-    divLogs.childElementCount ===0 ? divLogs.appendChild(p) : divLogs.insertBefore(p,divLogs.children[0]);
-}
-
-init();
+const newGame = new Game();
+newGame.initBtnStart();

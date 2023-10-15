@@ -113,12 +113,7 @@ body {
     height: 18px;
     overflow: hidden;
 }
-.pokemon .details .hp .bar .health {
-    width: 50%;
-    height: 100%;
-    background: -webkit-gradient(linear, left top, right top, from(lime), to(#8bf500));
-    background: linear-gradient(to right, lime, #8bf500);
-}
+
 
 
 .button {
@@ -169,15 +164,17 @@ html {
     margin: 30px 20px 0;
 }
 
-.catch_screen {
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(45deg, #d2ffde, #ceefff, #ded1ff);
-    position: fixed;
-    z-index: 0;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    opacity: .4;
+.health {
+    width: 50%;
+    height: 100%;
+    background: -webkit-gradient(linear, left top, right top, from(lime), to(#8bf500));
+    background: linear-gradient(to right, lime, #8bf500);
+}
+.health.low {
+    background: -webkit-gradient(linear, left top, right top, from(#ffcc00), to(#f1f500));
+    background: linear-gradient(to right, #ffcc00, #f1f500);
+}
+.health.critical {
+    background: -webkit-gradient(linear, left top, right top, from(#d20000), to(#f51700));
+    background: linear-gradient(to right, #d20000, #f51700);
 }
