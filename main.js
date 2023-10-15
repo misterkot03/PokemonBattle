@@ -36,6 +36,8 @@ class Game {
         btn.classList.add('button');
         btn.innerText ="New Game";
         btn.id ='start';
+        const  divLogs = document.querySelector('#logs');
+        divLogs.innerText='';
         control.appendChild(btn);
         this.initBtnStart();
     }
@@ -65,7 +67,7 @@ class Game {
                 }
 
                 const attackPlayer2 = player2.attacks[randomInteger(0, 3)];
-                const kickPlayer2 = random( attackPlayer2.maxDamage, attackPlayer2.minDamage); // TODO брать из атаки врага
+                const kickPlayer2 = random( attackPlayer2.maxDamage, attackPlayer2.minDamage);
                 player1.changeHP(kickPlayer2,function (count) {
                     thisGame.printLogs(generateLog(player2,player1,count))
                 });
